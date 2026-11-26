@@ -3,7 +3,7 @@
 // and writes the dossier the judges read. The run is deterministic: the
 // same repository always produces the same output bytes.
 
-import { cpSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, mkdirSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildDossier } from './vendor/makefun-game.ts';
@@ -11,8 +11,13 @@ import { buildDossier } from './vendor/makefun-game.ts';
 const repoRoot = dirname(fileURLToPath(import.meta.url));
 const outputDir = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
 
-rmSync(outputDir, { recursive: true, force: true });
+// The grader hands us its output directory as a mount point, so the
+// directory itself must never be removed (rmSync on a mount point
+// fails with EPERM and the run exits 1). Clear only its contents.
 mkdirSync(outputDir, { recursive: true });
+for (const entry of readdirSync(outputDir)) {
+  rmSync(join(outputDir, entry), { recursive: true, force: true });
+}
 
 for (const part of ['game', 'screenshots']) {
   cpSync(join(repoRoot, part), join(outputDir, part), { recursive: true });
