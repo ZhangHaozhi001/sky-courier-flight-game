@@ -186,6 +186,7 @@ function frame(now) {
   if (input.pressed('restart') && state !== 'title') reset();
   if (input.pressed('pause') && (state === 'flying' || state === 'paused')) {
     state = state === 'flying' ? 'paused' : 'flying';
+    if (state === 'paused') audio.stopEngine(); // step() stops while paused, so silence the engine here
   }
   if (input.pressed('mute')) audio.toggleMute();
 

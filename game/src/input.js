@@ -39,6 +39,15 @@ export function createInput(canvas) {
   };
   window.addEventListener('keydown', onKey(true));
   window.addEventListener('keyup', onKey(false));
+  // if the window loses focus while a key is down, its keyup may never
+  // arrive — clear everything so no key stays stuck when the player returns
+  window.addEventListener('blur', () => {
+    HELD.clear();
+    PRESSED.clear();
+    mouse.down = false;
+    mouse.dx = 0;
+    mouse.dy = 0;
+  });
 
   canvas.addEventListener('pointerdown', (e) => {
     mouse.down = true;

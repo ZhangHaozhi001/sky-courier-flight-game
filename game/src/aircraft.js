@@ -64,7 +64,9 @@ export function stepPlane(p, input, world, dt) {
   const rollTarget = (input.rollRight ? PLANE.maxRoll : 0) + (input.rollLeft ? -PLANE.maxRoll : 0);
   const attitudeRate = p.airborne ? 1 : p.speed / PLANE.takeOffSpeed;
   p.pitch += clamp(pitchTarget - p.pitch, -1, 1) * PLANE.pitchRate * attitudeRate * dt * 1.6;
-  p.roll += clamp(rollTarget - p.roll, -1, 1) * PLANE.rollRate * dt * 1.5;
+  // roll authority scales the same way: on the ground the wings barely bite,
+  // so the plane cannot lean over while it is still taxiing
+  p.roll += clamp(rollTarget - p.roll, -1, 1) * PLANE.rollRate * attitudeRate * dt * 1.5;
 
   // --- stall: too slow and the nose falls out of the sky ----------------------
   const wasStalling = p.stalling;
