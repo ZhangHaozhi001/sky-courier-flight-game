@@ -1,0 +1,29 @@
+/* Sky Courier: Valley Run — page chrome only; the game draws itself. */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #0b1620;
+  height: 100%;
+}
+
+body {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+}
+
+canvas#game {
+  width: min(100vw, 160vh);
+  aspect-ratio: 8 / 5;
+  display: block;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.55);
+  cursor: pointer;
+  touch-action: none;
+}
+
+noscript p {
+  color: #dfe9ee;
+  font-family: system-ui, sans-serif;
+  text-align: center;
+}
